@@ -1,0 +1,22 @@
+{
+  "name": "devtinder",
+  "version": "1.0.0",
+  "description": "developer social media ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "devtinder",
+    "tinder",
+    "developer",
+    "react",
+    "node",
+    "mongodb"
+  ],
+  "author": "bagpallab7",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
