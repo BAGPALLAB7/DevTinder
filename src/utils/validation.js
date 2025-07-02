@@ -2,10 +2,10 @@ import validator from 'validator';
 
 export const validateSignUpData = (data) => {
     const {firstName, lastName, email, password} = data.body
-    if (!firstName || firstName.trim().length < 4) {
+    if (!firstName || firstName.trim().length < 2) {
         throw new Error("First name must be at least 4 characters long");
     }
-    if (!lastName || lastName.trim().length < 4) {
+    if (!lastName || lastName.trim().length < 2) {
         throw new Error("Last name must be at least 4 characters long");
     }
     if (!email || !validator.isEmail(email)) {

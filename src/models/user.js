@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
 import validator from "validator";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 // Define the schema for the User
 const userSchema = new mongoose.Schema(
   {
-    firstName: { type: String, required: true, minLength: 4 },
-    lastName: { type: String, required: true, minLength: 4 },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     userName: { type: String, required: true, unique: true, trim: true },
     email: {
       type: String,
@@ -50,6 +52,17 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+
+userSchema.methods.getJWT = function () {
+const user = this
+const token = jwt.sign({ _id: user._id }, "bagpallab7");
+return token;
+}
+
+userSchema.methods.validatePassword = async function (userPassword) {
+const user = this;
+return await bcrypt.compare(userPassword, user.password);
+}
 // Create the User model
 const User = mongoose.model("User", userSchema);
 
