@@ -12,9 +12,12 @@ export const validateSignUpData = (data) => {
         throw new Error("Invalid email format");
         
     }
-    if (!password || !validator.isStrongPassword(password, { minLength: 8, minUppercase: 1, minNumbers: 1, minSymbols: 1 })) {
+    if (!password || !validateStrongPassword(password)) {
         throw new Error("Password must be strong and at least 8 characters long with at least one uppercase letter, one number, and one symbol");
         
     }
 }
 
+export const validateStrongPassword = (password) => {
+    return validator.isStrongPassword(password, { minLength: 8, minUppercase: 1, minNumbers: 1, minSymbols: 1 })
+}

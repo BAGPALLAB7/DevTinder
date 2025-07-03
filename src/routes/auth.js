@@ -1,6 +1,6 @@
 import express from "express";
 import User from "../models/user.js";
-import {validateSignUpData} from "../utils/validation.js"
+import { validateSignUpData } from "../utils/validation.js";
 import bcrypt from "bcrypt";
 
 const authRouter = express.Router();
@@ -49,11 +49,16 @@ authRouter.post("/login", async (req, res) => {
       return res.status(401).send("Invalid password");
     }
     const token = user.getJWT();
-    res.cookie("token", token);
+    res.cookie("token", token, { expiresIn: "7d" });
     res.send("Login successful");
   } catch (err) {
     res.status(400).send("Error during login - " + err.message);
   }
 });
 
+authRouter.post("/logout", (req, res) => {
+  res
+    .cookie("token", "null" , { expires: new Date(Date.now()) })
+    .send("Logout successful.");
+});
 export default authRouter;

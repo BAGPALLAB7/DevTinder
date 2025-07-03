@@ -2,6 +2,8 @@ import express from "express";
 const profileRouter = express.Router();
 import userAuth from "../middlewares/auth.js";
 import User from "../models/user.js";
+import { validateStrongPassword } from "../utils/validation.js";
+import bcrypt from "bcrypt";
 
 
 profileRouter.get("/profile", userAuth, async (req, res) => {
@@ -13,13 +15,9 @@ profileRouter.get("/profile", userAuth, async (req, res) => {
   }
 });
 
-profileRouter.patch("/updateUser/:username", userAuth, async (req, res) => {
+profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
   try {
-    if (req.user.userName !== req.params.username) {
-      throw new Error("Update user not permited.")
-    }
-    const userName = req.params?.username;
-    const { ...updates } = req.body;
+    const logedInUser = req.user;
     const allowedFields = [
       "firstName",
       "lastName",
@@ -39,18 +37,34 @@ profileRouter.patch("/updateUser/:username", userAuth, async (req, res) => {
     if (!isAllowed) {
       throw new Error("Invalid fields in request body");
     }
-    const updatedUser = await User.findOneAndUpdate(
-      { userName: userName },
-      updates,
-      { new: true, runValidators: true }
-    );
-    if (!updatedUser) {
-      return res.status(404).send("User not found");
-    }
-    res.send("User Updated");
+    Object.keys(req.body).forEach((key) => 
+    logedInUser[key] = req.body[key]);
+    await logedInUser.save();
+    
+    res.json({message: "Profile Updated successfully!", data: logedInUser});
   } catch (err) {
     res.status(400).send("Something went wrong." + err.message);
   }
 });
 
+profileRouter.patch("/profile/changePassword", userAuth ,async (req, res)=> {
+  try {
+    const logedInUser = req.user;
+const {password, newPassword} = req.body;
+const checkOldPassword = await bcrypt.compare(password, logedInUser.password);
+if (!checkOldPassword) {
+  throw new Error("Wrong password!");
+}
+if(!validateStrongPassword(newPassword))
+{ throw new Error("Please enter strong password") }
+
+logedInUser.password = await bcrypt.hash(newPassword,10);
+await logedInUser.save();
+res.send("Password updated successfully");
+  } catch (error) {
+    res.status(400).send('Error: ' + error.message)
+  }
+
+
+})
 export default profileRouter;
