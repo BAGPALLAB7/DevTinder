@@ -38,9 +38,9 @@ userRouter.get("/user/requests/pending", userAuth, async (req, res) => {
       })
       .populate("fromUserId", "firstName lastName age gender skills about photoUrl");
     if (pendingRequests.length <= 0) {
-      return res.status(404).json({ message: "No pending requests." });
+      return res.status(200).json({ message: "No pending requests." });
     }
-    res.status(200).send(pendingRequests);
+    res.status(200).json({data: pendingRequests});
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -56,7 +56,7 @@ userRouter.get
         $or: [{ fromUserId: logedInUser._id, status: "accepted" }, { toUserId: logedInUser._id, status: "accepted" }]
       }).populate("fromUserId", "firstName lastName age skills about photoUrl").populate("toUserId", "firstName lastName age skills about photoUrl");
       if (allrequests.length <= 0) {
-        return res.status(404).json({ message: "No connections." });
+        return res.status(200).json({ message: "No connections." });
       }
       const data = allrequests.map((row) => {
         if (row.fromUserId._id.equals(logedInUser._id )) {

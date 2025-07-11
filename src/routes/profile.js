@@ -25,7 +25,7 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
       "age",
       "gender",
       "photoUrl",
-      "description",
+      "about",
       "skills",
     ];
     if (req.body.skills?.length > 5) {

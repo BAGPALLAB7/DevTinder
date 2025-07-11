@@ -6,11 +6,16 @@ import profileRouter from "./routes/profile.js";
 import requestRouter from "./routes/requests.js";
 import userRouter from "./routes/user.js";
 import feedRouter from "./routes/feed.js";
+import cors from "cors";
 
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5173', // Your React app origin
+  credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
-
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);

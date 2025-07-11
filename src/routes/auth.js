@@ -19,7 +19,7 @@ authRouter.post("/signup", async (req, res) => {
 
   try {
     validateSignUpData(req);
-    const { password, firstName, lastName, email, userName, gender } = req.body;
+    const { password, firstName, lastName, email, userName, gender , age } = req.body;
     const passwordHash = await bcrypt.hash(password, 10);
     const user = new User({
       firstName,
@@ -27,12 +27,13 @@ authRouter.post("/signup", async (req, res) => {
       email,
       gender,
       userName,
+      age,
       password: passwordHash,
     });
-    await user.save();
-    console.log(req.body);
-
-    res.status(201).send("user database updated." + user);
+    const savedUser = await user.save();
+    const token = savedUser.getJWT();
+    res.cookie("token", token, { expiresIn: "7d" });
+    res.status(201).json({message: "user database updated.", data: savedUser});
   } catch (err) {
     res.status(400).send("Error updating user database -" + err.message);
   }
@@ -43,15 +44,24 @@ authRouter.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email: email });
     if (!user) {
-      return res.status(404).send("User not found");
+      throw new Error("user not found");
     }
     const isPasswordValid = await user.validatePassword(password);
     if (!isPasswordValid) {
       return res.status(401).send("Invalid password");
     }
     const token = user.getJWT();
+    const userInfo = (({
+      _id,
+      firstName,
+      lastName,
+      age,
+      skills,
+      about,
+      photoUrl,
+    }) => ({ _id, firstName, lastName, age, skills, about, photoUrl }))(user);
     res.cookie("token", token, { expiresIn: "7d" });
-    res.send("Login successful");
+    res.json({ message: "Login successful", data: userInfo });
   } catch (err) {
     res.status(400).send("Error during login - " + err.message);
   }
@@ -59,7 +69,7 @@ authRouter.post("/login", async (req, res) => {
 
 authRouter.post("/logout", (req, res) => {
   res
-    .cookie("token", "null" , { expires: new Date(Date.now()) })
+    .cookie("token", null, { expires: new Date(Date.now()) })
     .send("Logout successful.");
 });
 export default authRouter;

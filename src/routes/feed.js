@@ -40,7 +40,7 @@ feedRouter.get("/feed", userAuth, async (req, res) => {
       const finalFeedUsers = await User.find({
         $and: [{_id: { $nin: Array.from(hideUser)}},{_id: {$ne: logedInUser._id}}]
         
-      }).select("firstName lastName about skills age photoUrl").skip(skip).limit(limit)
+      }).select("firstName lastName about skills age gender photoUrl").skip(skip).limit(limit)
 
       res.status(200).json({message: "Feed fetched successfull", data: finalFeedUsers})
   } catch (error) {

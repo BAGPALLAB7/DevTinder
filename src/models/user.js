@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    userName: { type: String, required: true, unique: true, trim: true },
+    // userName: { type: String, unique: true, trim: true },
     email: {
       type: String,
       required: true,
@@ -54,13 +54,13 @@ const userSchema = new mongoose.Schema(
       },
       default: function () {
         if (this.gender === "male") {
-          return "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Fprofile_3135715&psig=AOvVaw0WjMYi6OSU8Vogqufk8loJ&ust=1751700442704000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCLC2r-_Woo4DFQAAAAAdAAAAABAK"
+          return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCA5xl6NzSgdIa4cqsFYRciby2bJ5JTYTXD7YU1fgBUFDvKYEAWEStcJSWjBaIApD9MjY&usqp=CAU"
         }
         else if (this.gender === "female"){
-          return "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ffree-photos-vectors%2Fprofile&psig=AOvVaw0WjMYi6OSU8Vogqufk8loJ&ust=1751700442704000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCLC2r-_Woo4DFQAAAAAdAAAAABAU"
+          return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDsCwBWaJ-476wVgyuebPZ2XG6ahMZoWU3kOdgRexmf3inxVRrvfR8BZC0DJWvLSp0b10&usqp=CAU"
         }
         else {
-          return "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Fprofile&psig=AOvVaw0WjMYi6OSU8Vogqufk8loJ&ust=1751700442704000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCLC2r-_Woo4DFQAAAAAdAAAAABAe"
+          return "https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
         }
       },
     },
